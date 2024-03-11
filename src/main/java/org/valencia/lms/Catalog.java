@@ -2,7 +2,7 @@
 // CEN3024C CRN24668
 // 03/03/2024
 
-package org.example;
+package org.valencia.lms;
 
 import com.opencsv.CSVReader;
 import java.io.FileReader;
@@ -11,10 +11,10 @@ import java.util.*;
 public class Catalog {
 
     // Book by id
-    private final HashMap<Integer, Book> idMap = new HashMap<>(){};
+    final HashMap<Integer, Book> idMap = new HashMap<>(){};
 
     // Book by title
-    private final HashMap<String, List<Book>> titleMap = new HashMap<>(){};
+    final HashMap<String, List<Book>> titleMap = new HashMap<>(){};
 
     /**
      * Adds books from a CSV file, returns the number of books added.
@@ -40,29 +40,14 @@ public class Catalog {
                 String title = nextRecord[2];
                 Book book = new Book(id, author, title, null);
 
-                // Check for duplicates?
+                // Check for duplicates
                 if (idMap.containsKey(id)) {
                     System.out.println("Duplicate id at record " + (i+1) + ".");
                     break;
                 }
 
-                // Add to idMap
-                idMap.put(id, book);
-
-                // Add to titleMap
-                //List<Book> list =
-                //        titleMap.containsKey(title)
-                //        ? titleMap.get(title)
-                //        : titleMap.put(title, new ArrayList<>());
-                //list.add(book);
-
-                if (titleMap.containsKey(title)) {
-                    List<Book> list = titleMap.get(title);
-                    list.add(book);
-                } else {
-                    List<Book> list = new ArrayList<>();
-                    titleMap.put(title, list);
-                    list.add(book);
+                if (addBook(book) == null) {
+                    System.out.println("Error importing book at record " + (i+1) + ".");
                 }
             }
 
@@ -76,8 +61,34 @@ public class Catalog {
     }
 
     /**
+     * Adds a book to the catalog.
+     * @param book The book to add.
+     * @return The same book on success, otherwise null.
+     */
+    Book addBook(Book book) {
+        // Check for duplicates
+        if (idMap.containsKey(book.id())) {
+            System.out.println("Duplicate id " + book.id() + ".");
+            return null;
+        }
+
+        // Add to idMap
+        idMap.put(book.id(), book);
+
+        // Add to titleMap
+        List<Book> list = titleMap.get(book.title());
+        if (list == null) {
+            list = new ArrayList<>();
+            titleMap.put(book.title(), list);
+        }
+        list.add(book);
+
+        return book;
+    }
+
+    /**
      * Removes the book with the given ID from the collection.
-     * @return true if successful
+     * @return the book if successful, otherwise null
      */
     Book removeBook(int Id) {
         Book book = idMap.remove(Id);
