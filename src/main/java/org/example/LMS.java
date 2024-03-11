@@ -173,9 +173,9 @@ public class LMS {
 
         if (books.size() == 1) {
             Book book = books.iterator().next();
-            catalog.checkOut(book.id());
+            catalog.checkIn(book.id());
             System.out.println();
-            System.out.println("Book " + book.id() + " checked out.");
+            System.out.println("Book " + book.id() + " checked in.");
             return;
         }
 
@@ -197,14 +197,14 @@ public class LMS {
             }
         }
 
-        if (catalog.checkOut(id) == null) {
+        if (catalog.checkIn(id) == null) {
             System.out.println();
             System.out.println("Book " + id + " not found.");
             return;
         }
 
         System.out.println();
-        System.out.println("Book " + id + " checked out.");
+        System.out.println("Book " + id + " checked in.");
     }
 
     /**

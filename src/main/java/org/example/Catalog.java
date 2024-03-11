@@ -104,9 +104,16 @@ public class Catalog {
 
         var calendar = GregorianCalendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, 28);
-        book = new Book(book.id(), book.author(), book.title(), calendar.getTime());
-        idMap.replace(Id, book);
-        return book;
+        Book newBook = new Book(book.id(), book.author(), book.title(), calendar.getTime());
+
+        // idMap
+        idMap.replace(Id, newBook);
+
+        // titleMap
+        List<Book> list = titleMap.get(book.title());
+        list.remove(book);
+        list.add(newBook);
+        return newBook;
     }
 
     //Check In a Book
@@ -117,9 +124,16 @@ public class Catalog {
         if (book.dueDate() == null)
             return null;
 
-        book = new Book(book.id(), book.author(), book.title(), null);
-        idMap.replace(Id, book);
-        return book;
+        Book newBook = new Book(book.id(), book.author(), book.title(), null);
+
+        // idMap
+        idMap.replace(Id, newBook);
+
+        // titleMap
+        List<Book> list = titleMap.get(book.title());
+        list.remove(book);
+        list.add(newBook);
+        return newBook;
     }
 
     Collection<Book> getBooks() {

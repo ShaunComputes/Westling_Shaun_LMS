@@ -1,3 +1,7 @@
 1,Author1,Title1
 2,Author2,Title2
 3,Author3,Title3
+4,Author4,DuplicateTitle
+5,Author4,DuplicateTitle
+6,Author4,DuplicateTitle
+7,Author4,DuplicateTitle
