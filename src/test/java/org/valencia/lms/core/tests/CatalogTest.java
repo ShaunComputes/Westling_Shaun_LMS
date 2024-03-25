@@ -1,18 +1,17 @@
 // Shaun Westling
 // CEN3024C CRN24668
 // 03/10/2024
-package org.valencia.lms;
+package org.valencia.lms.core.tests;
 
 import org.junit.Assert;
+import org.valencia.lms.core.Book;
+import org.valencia.lms.core.Catalog;
 
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 
-import static org.junit.Assert.*;
-
 public class CatalogTest {
-
     private final Catalog catalog = new Catalog();
 
     @org.junit.Before

@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="LMS Console" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="org.valencia.lms.console.LMS" />
+  <configuration default="false" name="LMS GUI" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="org.valencia.lms.gui.ClientForm" />
     <module name="LMS" />
     <method v="2">
       <option name="Make" enabled="true" />

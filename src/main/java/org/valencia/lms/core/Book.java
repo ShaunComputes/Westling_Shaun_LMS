@@ -2,7 +2,7 @@
 // CEN3024C CRN24668
 // 03/03/2024
 
-package org.valencia.lms;
+package org.valencia.lms.core;
 
 import java.util.Date;
 

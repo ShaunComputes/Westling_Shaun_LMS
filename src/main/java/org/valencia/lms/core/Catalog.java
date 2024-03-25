@@ -2,9 +2,10 @@
 // CEN3024C CRN24668
 // 03/03/2024
 
-package org.valencia.lms;
+package org.valencia.lms.core;
 
 import com.opencsv.CSVReader;
+
 import java.io.FileReader;
 import java.util.*;
 
@@ -21,7 +22,7 @@ public class Catalog {
      * @param filePath path to the csv file
      * @return number of books added
      */
-    int addBooksFromFile(String filePath) {
+    public int addBooksFromFile(String filePath) {
         try {
             FileReader filereader = new FileReader(filePath);
             CSVReader csvReader = new CSVReader(filereader);
@@ -65,7 +66,7 @@ public class Catalog {
      * @param book The book to add.
      * @return The same book on success, otherwise null.
      */
-    Book addBook(Book book) {
+    public Book addBook(Book book) {
         // Check for duplicates
         if (idMap.containsKey(book.id())) {
             System.out.println("Duplicate id " + book.id() + ".");
@@ -90,7 +91,7 @@ public class Catalog {
      * Removes the book with the given ID from the collection.
      * @return the book if successful, otherwise null
      */
-    Book removeBook(int Id) {
+    public Book removeBook(int Id) {
         Book book = idMap.remove(Id);
         if (book == null) {
             return null;
@@ -108,7 +109,7 @@ public class Catalog {
     //The application allows the user to check out a book from the database by title, which is supplied by the user.
     //When a book is checked out, its status is changed to “checked out” and its due date is 4 weeks from the current date.
     //An error message must display if a book is already checked out.
-    Book checkOut(int Id) {
+    public Book checkOut(int Id) {
         Book book = idMap.get(Id);
         if (book.dueDate() != null)
             return null;
@@ -130,7 +131,7 @@ public class Catalog {
     //Check In a Book
     //The application allows the user to check in a book from the database by title, which is supplied by the user.
     //When a book is checked in, its status is changed to “checked in” and its due date is “null”.
-    Book checkIn(int Id) {
+    public Book checkIn(int Id) {
         Book book = idMap.get(Id);
         if (book.dueDate() == null)
             return null;
@@ -147,15 +148,15 @@ public class Catalog {
         return newBook;
     }
 
-    Collection<Book> getBooks() {
+    public Collection<Book> getBooks() {
         return idMap.values();
     }
 
-    Collection<Book> getBooks(String title) {
+    public Collection<Book> getBooks(String title) {
         return titleMap.get(title);
     }
 
-    Collection<Book> getBooksForCheckOut(String Title) {
+    public Collection<Book> getBooksForCheckOut(String Title) {
         if (!titleMap.containsKey(Title)) {
             return null;
         }
@@ -168,7 +169,7 @@ public class Catalog {
         return list;
     }
 
-    Collection<Book> getBooksForCheckIn(String Title) {
+    public Collection<Book> getBooksForCheckIn(String Title) {
         if (!titleMap.containsKey(Title)) {
             return null;
         }

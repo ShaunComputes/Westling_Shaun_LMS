@@ -2,7 +2,10 @@
 // CEN3024C CRN24668
 // 03/03/2024
 
-package org.valencia.lms;
+package org.valencia.lms.console;
+
+import org.valencia.lms.core.Book;
+import org.valencia.lms.core.Catalog;
 
 import java.util.Collection;
 import java.util.Scanner;
