@@ -108,9 +108,9 @@ public class LMS {
 
         if (books.size() == 1) {
             Book book = books.iterator().next();
-            catalog.checkOut(book.id());
+            catalog.checkOut(book.barcode());
             System.out.println();
-            System.out.println("Book " + book.id() + " checked out.");
+            System.out.println("Book " + book.barcode() + " checked out.");
             return;
         }
 
@@ -176,9 +176,9 @@ public class LMS {
 
         if (books.size() == 1) {
             Book book = books.iterator().next();
-            catalog.checkIn(book.id());
+            catalog.checkIn(book.barcode());
             System.out.println();
-            System.out.println("Book " + book.id() + " checked in.");
+            System.out.println("Book " + book.barcode() + " checked in.");
             return;
         }
 
@@ -252,7 +252,7 @@ public class LMS {
             }
 
             try {
-                if (catalog.removeBook(id) != null) {
+                if (catalog.removeBook(id)) {
                     System.out.println("Book removed from collection.");
                 } else {
                     System.out.println("Book not in collection.");
@@ -323,14 +323,8 @@ public class LMS {
 
         // TODO: Warn if the book is checked out?
 
-        Book book = catalog.removeBook(id);
-        if (book == null) {
-            System.out.println();
-            System.out.println("Book " + id + " not found.");
-            return;
-        }
-
+        String message = catalog.removeBook(id) ? "Book " + id + " removed." : "Book " + id + " not found.";
         System.out.println();
-        System.out.println("Book " + id + " removed.");
+        System.out.println(message);
     }
 }

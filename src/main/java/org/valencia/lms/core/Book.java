@@ -4,10 +4,10 @@
 
 package org.valencia.lms.core;
 
-import java.util.Date;
+import java.sql.Date;
 
-public record Book(int id, String author, String title, Date dueDate) {
+public record Book(int barcode, String author, String title, String genre, Date dueDate) {
     public String toString() {
-        return "id: " + id + "  author: " + author + "  title: " + title + " due date: " + dueDate;
+        return "barcode: " + barcode + "  author: " + author + "  title: " + title + " genre: " + genre + " due date: " + dueDate;
     }
 }

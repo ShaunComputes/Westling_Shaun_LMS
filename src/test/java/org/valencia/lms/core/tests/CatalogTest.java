@@ -15,20 +15,9 @@ public class CatalogTest {
     private final Catalog catalog = new Catalog();
 
     @org.junit.Before
-    public void setUp() throws Exception {
+    public void setUp() {
         var calendar = GregorianCalendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, 28);
-
-        catalog.addBook(new Book(  1, "Author 1", "Title 1", null));
-        catalog.addBook(new Book(  2, "Author 2", "Title 2", calendar.getTime()));
-        catalog.addBook(new Book(  3, "Author 3", "Title 3", null));
-        catalog.addBook(new Book(  4, "Author 4", "Title 4", null));
-        catalog.addBook(new Book(  5, "Author 4", "Title 4", calendar.getTime()));
-        catalog.addBook(new Book(  6, "Author 4", "Title 4", null));
-        catalog.addBook(new Book(  7, "Author 5", "Title 5", null));
-        catalog.addBook(new Book(  8, "Author 5", "Title 5", calendar.getTime()));
-        catalog.addBook(new Book(  9, "Author 5", "Title 5", calendar.getTime()));
-        catalog.addBook(new Book( 10, "Author 5", "Title 5", calendar.getTime()));
     }
 
     //@org.junit.After
@@ -46,19 +35,19 @@ public class CatalogTest {
     @org.junit.Test
     public void addBook() {
         // Adding a new book
-        Assert.assertNotNull(catalog.addBook(new Book(100, "Author 5", "Title 5", null)));
+        Assert.assertTrue(catalog.addBook("Author 5", "Title 5", "Genre 5"));
 
         // Adding a duplicate book id
-        Assert.assertNull(catalog.addBook(new Book( 10, "Author 5", "Title 5", null)));
+        //Assert.assertFalse(catalog.addBook("Author 5", "Title 5", "Genre 5"));
     }
 
     @org.junit.Test
     public void removeBook() {
         // Removing a valid book id
-        Assert.assertNotNull(catalog.removeBook(3));
+        Assert.assertTrue(catalog.removeBook(3));
 
         // Removing an invalid book id
-        Assert.assertNull(catalog.removeBook(333));
+        Assert.assertFalse(catalog.removeBook(333));
     }
 
     @org.junit.Test

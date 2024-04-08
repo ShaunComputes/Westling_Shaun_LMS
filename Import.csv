@@ -1,7 +1,7 @@
-1,Author1,Title1
-2,Author2,Title2
-3,Author3,Title3
-4,Author4,DuplicateTitle
-5,Author4,DuplicateTitle
-6,Author4,DuplicateTitle
-7,Author4,DuplicateTitle
+Author1,Title1,Genre1
+Author2,Title2,Genre2
+Author3,Title3,Genre3
+Author4,DuplicateTitle,Genre4
+Author4,DuplicateTitle,Genre4
+Author4,DuplicateTitle,Genre4
+Author4,DuplicateTitle,Genre4

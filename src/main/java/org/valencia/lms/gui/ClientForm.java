@@ -41,6 +41,8 @@ public class ClientForm extends JFrame {
         removeBarcodeButton.addActionListener(e -> removeBarcodeAction());
         removeTitleButton.addActionListener(e -> removeTitleAction());
         exitButton.addActionListener(e -> exitAction());
+
+        viewCatalogAction();
     }
 
     /**
@@ -50,16 +52,20 @@ public class ClientForm extends JFrame {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
-            java.io.File file = fileChooser.getSelectedFile();
-            if (!file.exists()) {
-                String message = "File does not exist.";
-                textArea1.setText(message);
-                JOptionPane.showMessageDialog(this, message);
-                return;
-            }
+            try {
+                java.io.File file = fileChooser.getSelectedFile();
+                if (!file.exists()) {
+                    showMessage("File does not exist.");
+                    return;
+                }
 
-            catalog.addBooksFromFile(file.getAbsolutePath());
+                catalog.addBooksFromFile(file.getAbsolutePath());
+            } catch (Exception e) {
+                showMessage(e.getMessage());
+            }
         }
+
+        showMessage("Import complete.");
     }
 
     /**
@@ -89,16 +95,12 @@ public class ClientForm extends JFrame {
         try {
             id = Integer.parseInt(input);
         } catch (NumberFormatException e) {
-            String message = "Invalid Id.";
-            textArea1.setText(message);
-            JOptionPane.showMessageDialog(this, message);
+            showMessage("Invalid Id.");
             return;
         }
 
-        Book book = catalog.removeBook(id);
-        String message = book == null ? "Book " + id + " not found." : "Book " + id + " removed successfully.";
-        textArea1.setText(message);
-        JOptionPane.showMessageDialog(this, message);
+        String message = catalog.removeBook(id) ? "Book " + id + " removed successfully." : "Book " + id + " not found.";
+        showMessage(message);
     }
 
     /**
@@ -113,12 +115,12 @@ public class ClientForm extends JFrame {
         Collection<Book> books = catalog.getBooks(title);
 
         if (books == null) {
-            textArea1.setText("Title not found.");
+            showMessage("Title not found.");
             return;
         }
 
         if (books.isEmpty()) {
-            textArea1.setText("No books are available.");
+            showMessage("No books are available.");
             return;
         }
 
@@ -126,7 +128,7 @@ public class ClientForm extends JFrame {
         if (books.size() == 1)
         {
             Book book = books.iterator().next();
-            id = book.id();
+            id = book.barcode();
         }
         else
         {
@@ -136,26 +138,21 @@ public class ClientForm extends JFrame {
                 if (!ids.isEmpty()) {
                     ids.append(", ");
                 }
-                ids.append(book.id());
+                ids.append(book.barcode());
             }
 
-            String input = JOptionPane.showInputDialog("Which book id [" + ids.toString() + "]: ");
+            String input = JOptionPane.showInputDialog("Which book id [" + ids + "]: ");
             if (input == null) return;
 
             try {
                 id = Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                String message = "Invalid Id.";
-                textArea1.setText(message);
-                JOptionPane.showMessageDialog(this, message);
+                showMessage("Invalid Id.");
                 return;
             }
         }
 
-        Book book = catalog.removeBook(id);
-        String message = book == null ? "Book " + id + " not found." : "Book " + id + " removed successfully.";
-        textArea1.setText(message);
-        JOptionPane.showMessageDialog(this, message);
+        showMessage(catalog.removeBook(id) ? "Book " + id + " removed successfully." : "Book " + id + " not found.");
     }
 
     /**
@@ -169,22 +166,18 @@ public class ClientForm extends JFrame {
         Collection<Book> books = catalog.getBooksForCheckOut(title);
 
         if (books == null) {
-            String message = "Title not found.";
-            textArea1.setText(message);
-            JOptionPane.showMessageDialog(this, message);
+            showMessage("Title not found.");
             return;
         }
 
         if (books.isEmpty()) {
-            String message = "No books are available.";
-            textArea1.setText(message);
-            JOptionPane.showMessageDialog(this, message);
+            showMessage("No books are available.");
             return;
         }
 
         int id;
         if (books.size() == 1) {
-            id = books.iterator().next().id();
+            id = books.iterator().next().barcode();
         }
         else
         {
@@ -194,32 +187,26 @@ public class ClientForm extends JFrame {
                 if (!ids.isEmpty()) {
                     ids.append(", ");
                 }
-                ids.append(book.id());
+                ids.append(book.barcode());
             }
 
-            String input = JOptionPane.showInputDialog("Which book id [" + ids.toString() + "]: ");
+            String input = JOptionPane.showInputDialog("Which book id [" + ids + "]: ");
             if (input == null) return;
 
             try {
                 id = Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                String message = "Invalid Id.";
-                textArea1.setText(message);
-                JOptionPane.showMessageDialog(this, message);
+                showMessage("Invalid Id.");
                 return;
             }
         }
 
         if (catalog.checkOut(id) == null) {
-            String message = "Book " + id + " not found.";
-            textArea1.setText(message);
-            JOptionPane.showMessageDialog(this, message);
+            showMessage("Book " + id + " not found.");
             return;
         }
 
-        String message = "Book " + id + " checked out.";
-        textArea1.setText(message);
-        JOptionPane.showMessageDialog(this, message);
+        showMessage("Book " + id + " checked out.");
     }
 
     /**
@@ -233,22 +220,18 @@ public class ClientForm extends JFrame {
         Collection<Book> books = catalog.getBooksForCheckIn(title);
 
         if (books == null) {
-            String message = "Title not found.";
-            textArea1.setText(message);
-            JOptionPane.showMessageDialog(this, message);
+            showMessage("Title not found.");
             return;
         }
 
         if (books.isEmpty()) {
-            String message = "No books are available.";
-            textArea1.setText(message);
-            JOptionPane.showMessageDialog(this, message);
+            showMessage("No books are available.");
             return;
         }
 
         int id;
         if (books.size() == 1) {
-            id = books.iterator().next().id();
+            id = books.iterator().next().barcode();
         }
         else
         {
@@ -258,32 +241,32 @@ public class ClientForm extends JFrame {
                 if (!ids.isEmpty()) {
                     ids.append(", ");
                 }
-                ids.append(book.id());
+                ids.append(book.barcode());
             }
 
-            String input = JOptionPane.showInputDialog("Which book id [" + ids.toString() + "]: ");
+            String input = JOptionPane.showInputDialog("Which book id [" + ids + "]: ");
             if (input == null) return;
 
             try {
                 id = Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                String message = "Invalid Id.";
-                textArea1.setText(message);
-                JOptionPane.showMessageDialog(this, message);
+                showMessage("Invalid Id.");
                 return;
             }
         }
 
         if (catalog.checkIn(id) == null) {
-            String message = "Book " + id + " not found.";
-            textArea1.setText(message);
-            JOptionPane.showMessageDialog(this, message);
+            showMessage("Book " + id + " not found.");
             return;
         }
 
-        String message = "Book " + id + " checked in.";
-        textArea1.setText(message);
+        showMessage("Book " + id + " checked in.");
+    }
+
+    private void showMessage(String message) {
+        //textArea1.setText(message);
         JOptionPane.showMessageDialog(this, message);
+        viewCatalogAction();
     }
 
     /**
