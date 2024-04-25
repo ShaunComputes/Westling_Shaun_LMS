@@ -76,7 +76,7 @@ public class LMS {
     /**
      * Check Out A Book
      * The application allows the user to check out a book from the database by title, which is supplied by the user.
-     * When a book is checked out, its status is changed to “checked out” and its due date is 4 weeks from the current date.
+     * When a book is checked out, its status is changed to "checked out" and its due date is 4 weeks from the current date.
      * An error message must display if a book is already checked out.
      */
     public static void checkOutBook() {
@@ -145,7 +145,7 @@ public class LMS {
     /**
      * Check In a Book
      * The application allows the user to check in a book from the database by title, which is supplied by the user.
-     * When a book is checked in, its status is changed to “checked in” and its due date is “null”.
+     * When a book is checked in, its status is changed to "checked in" and its due date is "null".
      */
     public static void checkInBook() {
         String title;

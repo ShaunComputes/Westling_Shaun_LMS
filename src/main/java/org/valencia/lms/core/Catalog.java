@@ -94,10 +94,14 @@ public class Catalog {
         }
     }
 
-    //Check Out A Book
-    //The application allows the user to check out a book from the database by title, which is supplied by the user.
-    //When a book is checked out, its status is changed to “checked out” and its due date is 4 weeks from the current date.
-    //An error message must display if a book is already checked out.
+    /**
+     * Check Out A Book
+     * The application allows the user to check out a book from the database by title, which is supplied by the user.
+     * When a book is checked out, its status is changed to "checked out" and its due date is 4 weeks from the current date.
+     * An error message must display if a book is already checked out.
+     * @param barcode the book's unique barcode
+     * @return a copy of the book after checked out
+     */
     public Book checkOut(int barcode) {
         var calendar = GregorianCalendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, 28);
@@ -111,9 +115,13 @@ public class Catalog {
         }
     }
 
-    //Check In a Book
-    //The application allows the user to check in a book from the database by title, which is supplied by the user.
-    //When a book is checked in, its status is changed to “checked in” and its due date is “null”.
+    /**
+     * Check In a Book
+     * The application allows the user to check in a book from the database by title, which is supplied by the user.
+     * When a book is checked in, its status is changed to "checked in" and its due date is "null".
+     * @param barcode The book's unique ID.
+     * @return A copy of the book after check in.
+     */
     public Book checkIn(int barcode) {
         try {
             JDBC.booksCheckin(connection, barcode);
@@ -123,6 +131,10 @@ public class Catalog {
         }
     }
 
+    /**
+     * Get all books from the database.
+     * @return a collection of all books
+     */
     public Collection<Book> getBooks() {
         try {
             return JDBC.booksSelect(connection);
@@ -132,6 +144,11 @@ public class Catalog {
         }
     }
 
+    /**
+     * Search for a book with a matching title.
+     * @param Title The book title to search for.
+     * @return A collection of books.
+     */
     public Collection<Book> getBooks(String Title) {
         try {
             return JDBC.booksSelect(connection, Title);
@@ -140,6 +157,11 @@ public class Catalog {
         }
     }
 
+    /**
+     * Search for a book with a matching title that is currently checked in.
+     * @param Title The book title to search for.
+     * @return A collection of books.
+     */
     public Collection<Book> getBooksForCheckOut(String Title) {
         try {
             return JDBC.booksSelectCheckout(connection, Title);
@@ -148,6 +170,11 @@ public class Catalog {
         }
     }
 
+    /**
+     * Search for a book with a matching title that is currently checked out.
+     * @param Title The book title to search for.
+     * @return A collection of books.
+     */
     public Collection<Book> getBooksForCheckIn(String Title) {
         try {
             return JDBC.booksSelectCheckin(connection, Title);

@@ -13,7 +13,14 @@ import java.util.List;
 
 import static java.lang.System.exit;
 
+/**
+ * Contains methods for interacting with the database.
+ */
 public class JDBC {
+
+    /**
+     * Check if the driver is installed before trying to query the database.
+     */
     public static void checkSqliteDriver() {
         try {
             Class.forName("org.sqlite.JDBC");
@@ -22,11 +29,19 @@ public class JDBC {
         }
     }
 
+    /**
+     * Gets a re-usable connection the to database.
+     * @return a connection to the database.
+     * @throws SQLException
+     */
     public static Connection connect() throws SQLException {
         String url = "jdbc:sqlite:LMS.sqlite.db";
         return DriverManager.getConnection(url);
     }
 
+    /**
+     * Deletes and re-creates database with default data
+     */
     public static void createNewDatabase() {
         File f = new File("LMS.sqlite.db");
         if(f.exists() && !f.isDirectory()) {
@@ -75,6 +90,11 @@ public class JDBC {
         }
     }
 
+    /**
+     * SQL query to create the Books table.
+     * @param conn Connection to the database.
+     * @throws SQLException
+     */
     private static void booksCreate(Connection conn) throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS Books (\n"
                 + "barcode INTEGER PRIMARY KEY,"
@@ -90,6 +110,15 @@ public class JDBC {
         System.out.println("Books table created.");
     }
 
+    /**
+     * Query to insert a book into the Books table.
+     * @param conn Connection to the database.
+     * @param barcode The book's barcode.
+     * @param title The book's title.
+     * @param author The book's author.
+     * @param genre The book's genre.
+     * @throws SQLException
+     */
     public static void booksInsert(Connection conn, int barcode, String title, String author, String genre) throws SQLException {
         String sql = "INSERT INTO Books (barcode, title, author, genre) VALUES(?,?,?,?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -102,6 +131,15 @@ public class JDBC {
         }
     }
 
+    /**
+     * Query to insert a book into the Books table.
+     * The book's barcode will be generated automatically.
+     * @param conn Connection to the database.
+     * @param author The book's author.
+     * @param title The book's title.
+     * @param genre The book's genre.
+     * @throws SQLException
+     */
     public static void booksInsert(Connection conn, String author, String title, String genre) throws SQLException {
         String sql = "INSERT INTO Books (title, author, genre) VALUES(?,?,?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -113,6 +151,17 @@ public class JDBC {
         }
     }
 
+    /**
+     * Query to insert a book into the Books table.
+     * The book's barcode will be generated automatically.
+     * @param conn Connection to the database.
+     * @param author The book's author.
+     * @param title The book's title.
+     * @param genre The book's genre.
+     * @param status Whether the book is checked in or checked out.
+     * @param duedate The book's due date.
+     * @throws SQLException
+     */
     public static void booksInsert(Connection conn, String author, String title, String genre, boolean status, Date duedate) throws SQLException {
         String sql = "INSERT INTO Books (title, author, genre, status, duedate) VALUES(?,?,?,?,?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -126,6 +175,12 @@ public class JDBC {
         }
     }
 
+    /**
+     * Query to delete a book from the Books table.
+     * @param conn Connection to the database.
+     * @param barcode The book's unique barcode.
+     * @throws SQLException
+     */
     public static void booksDelete(Connection conn, int barcode) throws SQLException {
         String sql = "DELETE FROM Books WHERE barcode = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -135,6 +190,13 @@ public class JDBC {
         }
     }
 
+    /**
+     * Query to mark a book as checked out.
+     * @param conn Connection to the database.
+     * @param barcode The book's unique barcode.
+     * @param duedate The due date for checking the book back in.
+     * @throws SQLException
+     */
     public static void booksCheckout(Connection conn, int barcode, Date duedate) throws SQLException {
         String sql = "UPDATE Books SET status = 1, duedate = ? WHERE barcode = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -145,6 +207,12 @@ public class JDBC {
         }
     }
 
+    /**
+     * Query to mark a book as checked in.
+     * @param conn Connection to the database.
+     * @param barcode The book's unique barcode.
+     * @throws SQLException
+     */
     public static void booksCheckin(Connection conn, int barcode) throws SQLException {
         String sql = "UPDATE Books SET status = 0, duedate = NULL WHERE barcode = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -154,6 +222,12 @@ public class JDBC {
         }
     }
 
+    /**
+     * Query to receive all books from the database.
+     * @param conn Connection to the database.
+     * @return a list of books.
+     * @throws SQLException
+     */
     public static List<Book> booksSelect(Connection conn) throws SQLException {
         String sql = "SELECT barcode, title, author, genre, status, duedate FROM Books";
         try (Statement stmt = conn.createStatement()) {
@@ -162,6 +236,13 @@ public class JDBC {
         }
     }
 
+    /**
+     * Query to retrieve a book from the database.
+     * @param conn Connection to the database.
+     * @param barcode The unique barcode to use in the query.
+     * @return the book with the given barcode.
+     * @throws SQLException
+     */
     public static Book booksSelect(Connection conn, int barcode) throws SQLException {
         String sql = "SELECT barcode, title, author, genre, status, duedate FROM Books WHERE barcode = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -172,6 +253,13 @@ public class JDBC {
         }
     }
 
+    /**
+     * Query to retrieve a book from the database.
+     * @param conn Connection to the database.
+     * @param title The title to search for.
+     * @return a list of books matching the title.
+     * @throws SQLException
+     */
     public static List<Book> booksSelect(Connection conn, String title) throws SQLException {
         String sql = "SELECT barcode, title, author, genre, status, duedate FROM Books WHERE title LIKE ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -181,6 +269,13 @@ public class JDBC {
         }
     }
 
+    /**
+     * Query to retrieve a list of books available for check out.
+     * @param conn Connection to the database.
+     * @param title The title to search for.
+     * @return a list of available books.
+     * @throws SQLException
+     */
     public static List<Book> booksSelectCheckout(Connection conn, String title) throws SQLException {
         String sql = "SELECT barcode, title, author, genre, status, duedate FROM Books WHERE title LIKE ? AND status = 0";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -190,6 +285,13 @@ public class JDBC {
         }
     }
 
+    /**
+     * Query to retrieve a list of books available for check in.
+     * @param conn Connection to the database.
+     * @param title The title to search for.
+     * @return a list of available books.
+     * @throws SQLException
+     */
     public static List<Book> booksSelectCheckin(Connection conn, String title) throws SQLException {
         String sql = "SELECT barcode, title, author, genre, status, duedate FROM Books WHERE title LIKE ? AND status = 1";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -199,6 +301,12 @@ public class JDBC {
         }
     }
 
+    /**
+     * Helper method to parse the SQL result into a list of Books.
+     * @param rs The SQL result set.
+     * @return the books from the result.
+     * @throws SQLException
+     */
     private static List<Book> booksSelect(ResultSet rs) throws SQLException {
         List<Book> books = new ArrayList<>();
         while (rs.next()) {
